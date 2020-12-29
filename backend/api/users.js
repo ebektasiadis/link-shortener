@@ -18,11 +18,12 @@ router.post('/', registerValidator, async (req, res) => {
     });
 
     try{
-        await newUser.save();
-        res.send('Done');
+        let saveResult = await newUser.save();
+        return res.json(saveResult);
     }catch(e){
-        console.log(e);
-        res.status(500).send('Error');
+        if(e.code == '11000'){
+            return res.status(400).json({success:false, message: 'account already exists'});
+        }
     }
 })
 
