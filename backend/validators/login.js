@@ -1,6 +1,6 @@
 import validator from "validator";
 
-export default (req, res) => {
+export default (req, res, next) => {
     const { email, password} = req.body;
 
     if(!email || !validator.isEmail(email)) {

@@ -3,8 +3,19 @@ version: '3.8'
 services:
   backend:
     build: backend
+    restart: on-failure
     volumes:
       - /usr/src/app/node_modules
       - ./backend:/usr/src/app
     ports:
       - 5000:5000
+  database:
+    restart: on-failure
+    image: mongo:latest
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb:/var/lib/mongodb
+
+volumes:
+  mongodb:
