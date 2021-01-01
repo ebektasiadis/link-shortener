@@ -1,5 +1,9 @@
+import passport from "passport";
 import express from "express";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+
+import constants from "../constants";
 
 import registerValidator from "../validators/register";
 import loginValidator from "../validators/login";
@@ -8,8 +12,8 @@ import User from "../models/User";
 
 const router = express.Router();
 
-router.post('/', registerValidator, async (req, res) => {
-    const saltedPassword = await bcrypt.hashSync(req.body.password, parseInt(process.env.BCRYPT_SALT_ROUNDS));
+router.post('/register', registerValidator, async (req, res) => {
+    const saltedPassword = await bcrypt.hashSync(req.body.password, constants.BCRYPT_SALT_ROUNDS);
     
     const newUser = new User({
         email: req.body.email,
@@ -27,8 +31,25 @@ router.post('/', registerValidator, async (req, res) => {
     }
 })
 
-router.get('/', loginValidator, (req, res) => {
-
+router.get('/login', loginValidator, async (req, res) => {
+    const user = await User.findOne({email: req.body.email});
+    if(user){
+        if(await bcrypt.compare(req.body.password, user.password)){
+            //Password is correct
+            const payload = { 
+                id: user._id,
+                email: user.email 
+            };
+            const userJwt = jwt.sign(payload, process.env.JWT_SECRET);
+            return res.json({success:true, jwtToken: userJwt});
+        }
+    }
+    return res.status(400).json({success:false, message: 'wrong credentials'});
 })
+
+//TODO: Test endpoint, just to showcase passport jwt authentication, to be removed
+router.get('/profile', passport.authenticate('jwt', { session: false }), (req, res) => {
+    return res.json('Authenticated!!');
+});
 
 export default router;

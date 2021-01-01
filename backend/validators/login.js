@@ -7,7 +7,7 @@ export default (req, res, next) => {
         return res.status(400).json({success: false, message: 'invalid email'});
     }
 
-    if(!password || !password2) {
+    if(!password) {
         return res.status(400).json({success: false, message: 'invalid password'});
     }
 
