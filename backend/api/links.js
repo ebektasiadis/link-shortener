@@ -20,7 +20,7 @@ linkValidator,
 async (req, res) => {
     const link = new Link({
         owner: req.user._id,
-        originalLink: req.body.link,
+        originalLink: new URL(req.body.link).href,
         shortLink: nanoid(constants.NANOID_LENGTH)
     });
 
