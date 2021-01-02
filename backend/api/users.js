@@ -31,7 +31,7 @@ router.post('/register', registerValidator, async (req, res) => {
     }
 })
 
-router.get('/login', loginValidator, async (req, res) => {
+router.post('/login', loginValidator, async (req, res) => {
     const user = await User.findOne({email: req.body.email});
     if(user){
         if(await bcrypt.compare(req.body.password, user.password)){
@@ -46,10 +46,5 @@ router.get('/login', loginValidator, async (req, res) => {
     }
     return res.status(400).json({success:false, message: 'wrong credentials'});
 })
-
-//TODO: Test endpoint, just to showcase passport jwt authentication, to be removed
-router.get('/profile', passport.authenticate('jwt', { session: false }), (req, res) => {
-    return res.json('Authenticated!!');
-});
 
 export default router;

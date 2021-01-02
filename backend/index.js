@@ -5,6 +5,7 @@ import passport from "passport";
 import bodyParser from "body-parser";
 
 import users from "./api/users";
+import links from "./api/links";
 import { jwtStrategy } from "./strategies";
 
 dotenv.config();
@@ -18,6 +19,7 @@ mongoose.connect('mongodb://database:27017/linkshortener', {useNewUrlParser: tru
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use('/api/users', users);
+app.use('/api/links', links);
 
 app.listen(port, (err) => {
     if(err){
