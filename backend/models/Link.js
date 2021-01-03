@@ -13,14 +13,16 @@ const linkSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    statistics: {
-        source: {
-            type: String
-        },
-        views: {
-            type: Number
-        } 
-    }
+    statistics: [
+        {
+            source: {
+                type: String
+            },
+            views: {
+                type: Number
+            } 
+        }
+    ]
 });
 
 const Link = new mongoose.model('Link', linkSchema);

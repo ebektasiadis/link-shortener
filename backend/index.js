@@ -25,11 +25,26 @@ app.use('/api/users', users);
 app.use('/api/links', links);
 
 app.get('/:id', async (req, res) => {
-    console.log(`Someone visited ${req.params.id}. He/she came from ${req.header('referer')}.`);
     const link = await Link.findOne({shortLink: req.params.id});
+
     if(link) {
+
+        let refererStatisticsIdx = link.statistics.findIndex(s => s.source === req.header('referer'));
+
+        if(refererStatisticsIdx < 0){
+            link.statistics.push({
+                source: req.header('referer'),
+                views: 0
+            });
+            refererStatisticsIdx = link.statistics.length-1;
+        }
+        
+        link.statistics[refererStatisticsIdx].views++;
+        link.save();
+
         return res.redirect(link.originalLink);
     }
+    
     return res.json({success: false, message: 'invalid id'});
 });
 
