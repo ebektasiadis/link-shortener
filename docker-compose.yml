@@ -9,6 +9,14 @@ services:
       - ./backend:/usr/src/app
     ports:
       - 5000:5000
+  frontend:
+    build: frontend
+    restart: on-failure
+    volumes:
+      - /usr/src/app/node_modules
+      - ./frontend:/usr/src/app
+    ports:
+      - 3000:3000
   database:
     restart: on-failure
     image: mongo:latest

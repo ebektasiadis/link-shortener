@@ -18,7 +18,6 @@ passport.use(jwtStrategy);
 
 mongoose.connect('mongodb://database:27017/linkshortener', {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true});
 
-app.enable('trust proxy');
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use('/api/users', users);
@@ -44,7 +43,7 @@ app.get('/:id', async (req, res) => {
 
         return res.redirect(link.originalLink);
     }
-    
+
     return res.json({success: false, message: 'invalid id'});
 });
 
