@@ -1,10 +1,12 @@
 FROM node:14.15.3-alpine
 
-WORKDIR /usr/src
+WORKDIR /usr/src/app
 
-RUN apk add bash
+# RUN apk add bash
 
-# COPY package.json .
-# RUN npm install
+RUN npm i -g react-scripts
 
-CMD ["ping", "127.0.0.1"]
+COPY package.json .
+RUN npm install
+
+CMD ["npm", "run", "start"]
